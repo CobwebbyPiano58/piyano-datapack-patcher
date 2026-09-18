@@ -16,7 +16,7 @@ Minecraft Java Edition のデータパックの主要なJSONファイルを、�
 | --- | --- | --- |
 | 26.2 | 26.3 | 対応 |
 
-本ツールは **正式版から正式版への変換のみ** を対象としています。  
+本ツールは **正式リリースから正式リリースへの変換のみ** を対象としています。  
 Snapshot、Pre-Release、Release Candidate 間の変換はサポート対象外です。
 
 ## 対応しているデータパック要素
@@ -35,7 +35,7 @@ Snapshot、Pre-Release、Release Candidate 間の変換はサポート対象外�
 
 > mcfunction内のインライン表記は変換対象外です。
 
- - 非対応の要素の例
+ - 非対応要素の例
    - `minecraft:pot_decorations` component
    - `minecraft:exploration_map` loot function
    - `worldgen/` registry
@@ -43,15 +43,13 @@ Snapshot、Pre-Release、Release Candidate 間の変換はサポート対象外�
 
 ## ダウンロード
 
-最新版は GitHub Releases からダウンロードしてください。
+Windows 向けの `.exe` を配布します。
+
+GitHub Releases からダウンロードしてください。
 
 > Release ページへのリンクは、公開後にここへ追加してください。
 
-Windows 向けの `.exe` を配布します。
-
 ## 使い方
-
-### 基本的な使い方
 
 1. 変換したいデータパックを用意します。
 2. データパックの **フォルダ** または **`.zip` ファイル** を `PiyanoDatapackPatcher` の `.exe` にドラッグ＆ドロップします。
@@ -63,20 +61,7 @@ Windows 向けの `.exe` を配布します。
 <元の名前>_patched_<変換先バージョン>.zip
 ```
 
-例:
-
-```text
-my_datapack_patched_26.3.zip
-```
-
-### 入力形式
-
-以下の形式に対応しています。
-
-- データパックフォルダ
-- `.zip` 形式のデータパック
-
-複数のデータパックを含む `datapacks` フォルダ自体を入力する使い方には、現在対応していません。
+例: `my_datapack_patched_26.3.zip`
 
 ## 出力とログ
 
