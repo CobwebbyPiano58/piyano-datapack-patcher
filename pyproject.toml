@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "piyano-datapack-patcher"
+version = "0.1.0"
+description = "A tool for updating Minecraft data packs between releases."
+requires-python = ">=3.12"
+
+[project.scripts]
+datapack-patcher = "patcher_cp58.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
