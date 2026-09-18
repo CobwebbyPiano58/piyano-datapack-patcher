@@ -63,7 +63,7 @@ class DatapackPatchResult():
 ###################################################################################
 
 def patch_datapack( datapack_path: Path, source_version=None, target_version=None, output_path=None, output_mode=None, output_name=None ):
-    if not datapack_path.is_dir():
+    if not datapack_path.exists():
         raise FileNotFoundError()
     if output_path is None:
         output_path = Path( datapack_path ).parent
@@ -72,28 +72,49 @@ def patch_datapack( datapack_path: Path, source_version=None, target_version=Non
 
     target_version = migration.get_version_from_name( target_version )
 
+    if output_name is None:
+        output_name = datapack_path.name
+        if output_name.endswith('.zip'):
+            output_name = output_name.removesuffix('.zip')
+        output_name += f'_patched_{target_version}'
+
     converters = migration.get_converters( source_version, target_version )
 
     datapack_output = Path()
     if output_mode == 'in-place':
-        datapack_output = datapack_path
-    else:
+        if datapack_path.is_file():
+            output_path = datapack_path.parent / datapack_path.name.removesuffix('.zip')
+            output_mode = 'in-place-zip'
+        else:
+            datapack_output = datapack_path
+    if output_mode != 'in-place':
         temp_dir = tempfile.TemporaryDirectory()
         temp_path = Path( temp_dir.name )
-        ( temp_path / 'data' ).mkdir( exist_ok=True )
+        datapack_output = temp_path / 'output'
+        ( datapack_output / 'data' ).mkdir( parents=True, exist_ok=True )
+
+        if datapack_path.is_file():
+            ( temp_path / 'input' / 'data' ).mkdir( parents=True, exist_ok=True )
+            shutil.unpack_archive(datapack_path, ( temp_path / 'input' ) , "zip")
+            datapack_path = ( temp_path / 'input' )
         if output_mode == 'overlay':
             shutil.copy2( 
                 datapack_path / "pack.mcmeta",
-                temp_path
+                datapack_output
+            )
+        elif output_mode == 'in-place-zip':
+            shutil.copytree( 
+                datapack_path, 
+                datapack_output, 
+                dirs_exist_ok=True
             )
         else:
             shutil.copytree( 
                 datapack_path, 
-                temp_path, 
+                datapack_output, 
                 ignore= ignore_dirs,
                 dirs_exist_ok=True
             )
-        datapack_output = temp_path
 
     patch_result = DatapackPatchResult()
 
@@ -125,14 +146,14 @@ def patch_datapack( datapack_path: Path, source_version=None, target_version=Non
     if output_mode == 'in-place':
         pass
     else:
-        if output_name is None:
-            output_name = f'{datapack_path.name}_patched_{target_version}'
         if output_mode == 'zip':
-            shutil.make_archive( output_path / output_name, format='zip', root_dir=temp_path )
+            shutil.make_archive( output_path / output_name, format='zip', root_dir=datapack_output )
         elif output_mode == 'folder':
-            shutil.copytree( temp_path, output_path / output_name , dirs_exist_ok=True )
+            shutil.copytree( datapack_output, output_path / output_name , dirs_exist_ok=True )
         elif output_mode == 'overlay':
-            shutil.copytree( temp_path, output_path / output_name , dirs_exist_ok=True )
+            shutil.copytree( datapack_output, output_path / output_name , dirs_exist_ok=True )
+        elif output_mode == 'in-place-zip':
+            shutil.make_archive( output_path, format='zip', root_dir=datapack_output )
         temp_dir.cleanup()
 
 ###################################################################################

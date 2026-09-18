@@ -66,7 +66,7 @@ def create_parser() -> argparse.ArgumentParser:
 def normalize_args( args: argparse.Namespace ) -> argparse.Namespace:
 
     args.input = Path( args.input ).resolve()
-    if not args.input.exists:
+    if not args.input.exists():
         raise FileNotFoundError( f'input datapach \"{args.input}\" was not found.' )
     elif not is_datapack( args.input ):
         raise ValueError( f'{args.input} is not a datapack.' )
@@ -87,9 +87,9 @@ def normalize_args( args: argparse.Namespace ) -> argparse.Namespace:
     if args.output is None:
         args.output = Path( args.input ).parent
 
-    if args.name is None:
-        file_name = Path( args.input ).name
-        args.name = f'{file_name}_patched_{args.target}'
+    #if args.name is None:
+    #    file_name = Path( args.input ).name
+    #    args.name = f'{file_name}_patched_{args.target}'
 
     return args
 
