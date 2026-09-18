@@ -47,7 +47,7 @@ A Windows `.exe` build is provided.
 
 Download it from GitHub Releases.
 
-> Add the Release page link here after publishing.
+https://github.com/CobwebbyPiano58/piyano-datapack-patcher/releases/latest
 
 ## Usage
 
